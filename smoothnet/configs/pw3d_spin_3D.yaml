@@ -1,0 +1,47 @@
+DEVICE : 'cuda'
+SEED_VALUE : 4321
+LOGDIR : ''
+EXP_NAME : 'default'
+DEBUG : True 
+OUTPUT_DIR : 'results' 
+
+DATASET_NAME : ''
+ESTIMATOR : ''
+BODY_REPRESENTATION : ''
+
+SMPL_MODEL_DIR : "data/smpl/"
+
+CUDNN :
+  BENCHMARK : True
+  DETERMINISTIC : False
+  ENABLED : True
+
+MODEL :
+  SLIDE_WINDOW_SIZE : 100
+  HIDDEN_SIZE : 512
+  RES_HIDDEN_SIZE : 16
+  NUM_BLOCK : 1
+  DROPOUT : 0.5
+
+TRAIN :
+  BATCH_SIZE : 128
+  WORKERS_NUM : 0 
+  EPOCH : 20 # official epochs
+#  EPOCH : 15
+  LR : 0.0001 
+  LRDECAY : 0.95 
+  RESUME : False
+  VALIDATE : True
+  USE_6D_SMPL : True
+  SMPL_TRANS_RELATIVE: False  # use SMPL translation relative to the first frame or not
+  OBJ_TRANS_RELATIVE: False # use object translation relative to the first frame or not
+
+EVALUATE :
+  PRETRAINED : ''
+  ROOT_RELATIVE : True
+  SLIDE_WINDOW_STEP_SIZE : 1
+LOSS :
+  W_ACCEL : 0.1
+  W_POS : 1.0 
+LOG :
+  NAME : ''
