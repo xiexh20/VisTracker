@@ -112,6 +112,8 @@ cfg.EVALUATE.SAVE_PACKED = False
 cfg.EVALUATE.SOURCE = 'test' # data source for evaluation, either test or train
 cfg.EVALUATE.OUTDIR = "results" # root path to all recon files
 cfg.EVALUATE.TEST_KID = 1 # which kinect is used for testing
+cfg.EVALUATE.OBJ_RECON_NAME = ""
+cfg.EVALUATE.NEURAL_PCA = False
 
 # loss config
 cfg.LOSS = CN()
@@ -181,6 +183,11 @@ def parse_args():
     parser.add_argument('-o', "--outdir", default=paths["RECON_PATH"])
     parser.add_argument("-t", "--test_kid", default=1, type=int, help="which kinect camera is used for testing")
 
+    # for object smoothing
+    parser.add_argument('-or', '--obj_recon_name', default='')
+    parser.add_argument('-neural_pca', default=False, action='store_true',
+                        help="input object 3x3 matrix is neural pca prediction")
+
     args = parser.parse_args()
     # print('configurations:', args, end='\n\n')
 
@@ -209,6 +216,8 @@ def parse_args():
     cfg.EVALUATE.SAVE_PACKED = args.save_packed
     cfg.EVALUATE.OUTDIR = args.outdir
     cfg.EVALUATE.TEST_KID = args.test_kid
+    cfg.EVALUATE.OBJ_RECON_NAME = args.obj_recon_name
+    cfg.EVALUATE.NEURAL_PCA = args.neural_pca
 
     # find checkpoints
     if args.checkpoint is None:

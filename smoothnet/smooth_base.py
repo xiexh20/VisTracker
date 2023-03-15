@@ -6,6 +6,7 @@ sys.path.append(os.getcwd())
 import joblib 
 import os.path as osp
 import torch
+import numpy as np
 
 from smoothnet.core.evaluate_config import parse_args 
 from smoothnet.utils.utils import slide_window_to_sequence
@@ -29,14 +30,84 @@ class SmootherBase:
             print(f'{cfg.EVALUATE.PRETRAINED} is not a pretrained model!!!!')
             exit()
         self.model = model
+        self.cfg = cfg
 
         self.outdir = cfg.EVALUATE.OUTDIR # root dir for all recon folders (packed files)
 
         # for convinience
         self.slide_window_step = cfg.EVALUATE.SLIDE_WINDOW_STEP_SIZE
         self.slide_window_size = cfg.MODEL.SLIDE_WINDOW_SIZE
-    
+
+    def seq2batches(self, data_seq, raw_data):
+        """
+        convert one sequence data as multiple mini-batches
+        Args:
+            data_seq: (T, D), T frames, each frame has data length D, numpy array
+            raw_data:
+
+        Returns: (B, L, D) mini-batches ready to the network
+
+        """
+        # prepare input as batches
+        data_len = len(data_seq)
+        if isinstance(data_seq, np.ndarray):
+            data_seq = torch.from_numpy(data_seq).reshape(data_len, -1)
+        # data_seq =
+        start_idx = np.arange(0, data_len - self.slide_window_size + 1, self.slide_window_step)
+        input_data = []
+        paths = []
+        for idx in start_idx:
+            input_data.append(data_seq[idx:idx + self.slide_window_size, :].clone())
+            paths.append(raw_data['frames'][idx:idx + self.slide_window_size])
+        # append last clip
+        if self.slide_window_step != 1:
+            print(f"Warning: the slide window step is {self.slide_window_step} instead of 1!")
+            input_data.append(data_seq[-self.slide_window_size:, :].clone())
+            paths.append(raw_data['frames'][-self.slide_window_size:].tolist())
+        input_data = torch.stack(input_data, 0)
+        return input_data, paths
+
     def test(self, cfg):
+        """
+        load packed SMPL-T parameters, smooth them and save
+        Returns:
+
+        """
+        self.check_config(cfg)
+        seq_folder = cfg.EVALUATE.SEQ_FOLDER
+        seq_name = osp.basename(seq_folder)
+
+        data, denoised, input_pred = self.model_forward(cfg, seq_folder)
+
+        old_recon = self.post_processing(data, denoised, input_pred)
+
+        new_name = self.get_save_name(cfg.EXP_NAME)
+        self.dump_packed(new_name, old_recon, seq_name)
+        print("All done")
+
+    def model_forward(self, cfg, seq_folder):
+        """
+        load data, preprocess, and run forward
+        Args:
+            cfg:
+            seq_folder:
+
+        Returns: preprocessed data, smoothed data and input
+
+        """
+        # load SMPL-T parameters from separate pkl files
+        raw_data = self.load_inputs_raw(seq_folder, cfg.EVALUATE.TEST_KID)
+        # preprocess raw data for network input
+        data = self.preprocess_input(raw_data)
+        with torch.no_grad():
+            input_pred = data['input_data'].to(self.device)
+            denoised = self.model(input_pred.permute(0, 2, 1)).permute(0, 2, 1)
+        return data, denoised, input_pred
+
+    def post_processing(self, data, denoised, input_pred):
+        raise NotImplemented
+
+    def check_config(self, cfg):
         raise NotImplemented
     
     def init_model(self, cfg):
@@ -53,6 +124,12 @@ class SmootherBase:
                               num_blocks=cfg.MODEL.NUM_BLOCK,
                               dropout=cfg.MODEL.DROPOUT).to(cfg.DEVICE)
         return model
+
+    def load_inputs_raw(self, seq_folder, test_kid=1):
+        raise NotImplemented
+
+    def preprocess_input(self, raw_data):
+        raise NotImplemented
     
     def dump_packed(self, new_name, outdict, seq_name):
         if "ICapS" in seq_name:

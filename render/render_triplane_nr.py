@@ -31,7 +31,7 @@ class TriplaneNrRenderer:
         kin_transform = KinectTransform(seq, no_intrinsic=True) if mesh_type == 'gt' else None
 
         loop = tqdm(range(start, reader.cvt_end(end)))
-        loop.set_description(reader.seq_name)
+        loop.set_description(f"render triplane {reader.seq_name}")
         for idx in loop:
             # faces = torch.from_numpy(smpl_fit.f.astype(int)).to(self.device).unsqueeze(0)
             for kid in kids:
