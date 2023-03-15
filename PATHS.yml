@@ -3,10 +3,13 @@
 # Cite: CHORE: Contact, Human and Object REconstruction from a single RGB image, ECCV'2022
 
 CODE: "/BS/xxie-4/work/VisTracker" # path to your project main folder
-BEHAVE_PATH: "/BS/xxie-5/static00/behave_release/sequences" # root path where BEHAVE sequences are stored
-PROCESSED_PATH: "/BS/xxie-5/static00/behave-train" # root path where processed data are saved
-RECON_PATH: "/scratch/inf0/user/xxie/" # root path where reconstruction results will be saved
-GT_PACKED: "/scratch/inf0/user/xxie/behave-packed" # path where GT data was packd
+BEHAVE_PATH: "/BS/xxie-5/static00/behave_release/sequences" # path to the original behave path
+EXTENDED_BEHAVE_PATH: '/BS/xxie-4/static00/test-seq' # root path where 30fps BEHAVE sequences are stored
+GT_PACKED: "/scratch/inf0/user/xxie/behave-packed" # path where packed GT data is saved
+
+# paths for output reconstruction and visualization
+RECON_PATH: "/scratch/inf0/user/xxie/recon-all" # root path where reconstruction results will be saved
+VIZ_PATH: "results/render" # root path to all recon renderings
 
 # paths to SMPL libs
 SMPL_ASSETS_ROOT: "assets"

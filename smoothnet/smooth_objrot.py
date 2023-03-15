@@ -36,6 +36,7 @@ class ObjrotSmoother(SmootherBase):
         seq_name = osp.basename(seq_folder)
         recon_file = osp.join(RECON_PATH, f'recon_{obj_recon_name}/{seq_name}_k{test_kid}.pkl')
         dat = joblib.load(recon_file)
+        print("Loaded data from packed file", recon_file)
 
         if neural_pca:
             obj_name = seq_name.split('_')[2]

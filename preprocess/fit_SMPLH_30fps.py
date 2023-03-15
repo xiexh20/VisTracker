@@ -64,8 +64,24 @@ class SMPLHFitter30fps(BaseFitter):
     def skip_frame(self, kpt_scores, thres=0.1):
         return False # keep all frames
 
-    def save_smpl_mesh(self, faces, outfile, ridx, verts):
-        pass # not saving mesh for this
+    # def save_smpl_mesh(self, faces, outfile, ridx, verts):
+    #     pass # not saving mesh for this
+
+    def is_batch_done(self, start:int, batch_end:int, reader:FrameDataReader, kid, redo):
+        """
+        is this mini-batch done or not
+        Returns: True/False
+
+        """
+        if redo:
+            return False
+        done = True
+        for idx in range(start, batch_end):
+            if self.is_done(reader.get_frame_folder(idx), kid) and not redo:
+                continue
+            done = False
+            break
+        return done
 
     def init_smpl(self, seq_folder, kid, start, end, redo=False):
         """
@@ -82,10 +98,12 @@ class SMPLHFitter30fps(BaseFitter):
         reader = FrameDataReader(seq_folder)
         batch_end = reader.cvt_end(end)
 
+        if self.is_batch_done(start, batch_end, reader, kid, redo):
+            return None, None
+
         poses, betas, trans = [], [], []
         frame_inds = []
         for idx in range(start, batch_end):
-            # TODO: check continuous done instead of single frames. 
             if self.is_done(reader.get_frame_folder(idx), kid) and not redo:
                 continue
             p, b = reader.get_mocap_params(idx, kid) # get initial pose estimations from FrankMocap 
@@ -178,7 +196,7 @@ class SMPLHFitter30fps(BaseFitter):
         loss_dict['temp'] = mse_loss(velo1, velo2)
 
     def get_outfile(self, frame_folder, kid):
-        return osp.join(frame_folder, f'k{kid}.smplfit_temporal.ply')
+        return osp.join(frame_folder, f'k{kid}.smplfit_temporal.pkl')
 
     def get_gtmesh_file(self, image_file):
         return osp.join(osp.dirname(image_file), 'person/fit03/person_fit.ply')

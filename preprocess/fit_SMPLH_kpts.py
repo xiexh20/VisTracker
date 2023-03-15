@@ -129,7 +129,7 @@ class BaseFitter:
         optimizer = self.init_globalpose_optimizer(smpl_split)
 
         iter_for_global, iter_for_all = self.get_globalopt_iters(), 20
-        max_iter, prev_loss = 100, 0
+        max_iter, prev_loss = self.get_max_iters(), 0
         steps_per_iter = 10
         loss_weights = self.get_loss_weights()
         pose_init = smpl.pose.clone()
@@ -254,10 +254,10 @@ class BaseFitter:
                 "pose": poses[ridx],
                 'betas':betas[ridx],
                 'trans':trans[ridx]
-            }, open(outfile.replace('.ply', '.pkl'), 'wb'))
+            }, open(outfile, 'wb'))
 
     def save_smpl_mesh(self, faces, outfile, ridx, verts):
-        Mesh(verts[ridx].cpu().numpy(), faces).write_ply(outfile)
+        Mesh(verts[ridx].cpu().numpy(), faces).write_ply(outfile.replace('.pkl', '.ply'))
 
     def skip_frame(self, kpts_scores, thres=0.1):
         "check the sum of kpt, skip if bad, scores: (25,)"
@@ -343,7 +343,7 @@ class BaseFitter:
 
     def get_outfile(self, frame_folder, kid):
         """output SMPL mesh file name"""
-        return osp.join(frame_folder, f'k{kid}.smplfit_kpt.ply')
+        return osp.join(frame_folder, f'k{kid}.smplfit_kpt.pkl')
 
     def init_smpl(self, seq_folder, kid, start, end, redo=False):
         """

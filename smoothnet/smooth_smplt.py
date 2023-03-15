@@ -128,38 +128,42 @@ class SMPLTSmoother(SmootherBase):
             trans: Tx3
 
         """
-        seq_name = osp.basename(seq_folder)
-        file = "/scratch/inf0/user/xxie/mocap-packed/Date03_Sub03_chairwood_hand_temporal-fit.pkl"
-        assert seq_name in file
-        reader = FrameDataReader(seq_folder, check_image=False)
-        # tri_poses, tri_betas, tri_trans = [], [], []
-        # loop = tqdm(range(0, len(reader)))
-        # loop.set_description(f'loading SMPL-T parameters for seq {reader.seq_name}')
-        # for i in loop:
-        #     data_tri = pkl.load(open(osp.join(reader.get_frame_folder(i), f'k{test_kid}.smplfit_temporal.pkl'), 'rb'))
-        #     tri_poses.append(data_tri['pose'])
-        #     tri_betas.append(data_tri['betas'])
-        #     tri_trans.append(data_tri['trans'])
-        #
+
+        # reader = FrameDataReader(seq_folder, check_image=False)
+        # seq_name = osp.basename(seq_folder)
+        # file = "/scratch/inf0/user/xxie/mocap-packed/Date03_Sub03_chairblack_lift_temporal-fit.pkl"
+        # assert seq_name in file
+        # # load from packed file
+        # packed_data = joblib.load(file)
         # data_dict = {
-        #     "poses": np.stack(tri_poses, 0),  # (T, K, 156)
-        #     "betas": np.stack(tri_betas, 0),
-        #     "trans": np.stack(tri_trans, 0),
+        #     "poses":packed_data['poses'],
+        #     "betas":packed_data['betas'],
+        #     'trans':packed_data['trans'],
         #
         #     'gender': reader.seq_info.get_gender(),
-        #     'frames': reader.frames
+        #     "frames":packed_data['frames']
         # }
 
-        # load from packed file
-        packed_data = joblib.load(file)
+        reader = FrameDataReader(seq_folder, check_image=False)
+        tri_poses, tri_betas, tri_trans = [], [], []
+        loop = tqdm(range(0, len(reader)))
+        loop.set_description(f'loading SMPL-T parameters of seq {reader.seq_name}')
+        for i in loop:
+            data_tri = pkl.load(open(osp.join(reader.get_frame_folder(i), f'k{test_kid}.smplfit_temporal.pkl'), 'rb'))
+            tri_poses.append(data_tri['pose'])
+            tri_betas.append(data_tri['betas'])
+            tri_trans.append(data_tri['trans'])
+
         data_dict = {
-            "poses":packed_data['poses'],
-            "betas":packed_data['betas'],
-            'trans':packed_data['trans'],
+            "poses": np.stack(tri_poses, 0),  # (T, K, 156)
+            "betas": np.stack(tri_betas, 0),
+            "trans": np.stack(tri_trans, 0),
 
             'gender': reader.seq_info.get_gender(),
-            "frames":packed_data['frames']
+            'frames': reader.frames
         }
+
+
 
         return data_dict
 

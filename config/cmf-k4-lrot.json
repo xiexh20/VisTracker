@@ -1,0 +1,56 @@
+{
+  "exp_name": "cmf-k4-lrot",
+  "split_file": "splits/behave-params.pkl",
+  "model_name": "cond-transformer",
+  "info": "less attention layers for both SMPL and object, more layers for joint, use GELU activation function, dropout=0.05, after-norm, rotation only, 4 kinects, larger model",
+
+  "num_epochs": 120,
+  "learning_rate": 0.0001,
+  "ck_period": 30,
+  "milestones": [30, 40],
+  "loss_weights": {
+    "lw_pose": 1.0,
+    "lw_accel": 0.1
+  },
+
+  "batch_size": 128,
+  "num_workers": 32,
+  "clip_len": 180,
+  "window": 1,
+  "start_fr_min": 0,
+  "start_fr_max": 180,
+  "min_drop_len": 10,
+  "max_drop_len": 120,
+  "multi_kinects": true,
+
+  "smpl_repre": "params",
+  "obj_repre": "6d",
+  "dim_smpl": 147,
+  "dim_obj": 6,
+  "out_dim": 6,
+
+  "num_layers_smpl": 2,
+  "d_model_smpl": 128,
+  "num_heads_smpl": 4,
+  "dim_forward_smpl": 256,
+  "dropout_smpl": 0.05,
+  "pre_norm_smpl": false,
+  "activation_smpl": "gelu",
+
+  "num_layers_obj": 2,
+  "d_model_obj": 32,
+  "num_heads_obj": 2,
+  "dim_forward_obj": 64,
+  "dropout_obj": 0.05,
+  "pre_norm_obj": false,
+  "activation_obj": "gelu",
+
+  "num_layers_joint": 4,
+  "num_heads_joint": 1,
+  "dim_forward_joint": 256,
+  "dropout_joint": 0.05,
+  "pre_norm_joint": false,
+  "activation_joint": "gelu",
+
+  "hidden_dims": [32]
+}

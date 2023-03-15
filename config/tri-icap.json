@@ -1,0 +1,92 @@
+{
+  "exp_name": "tri-icap",
+  "info": "L2 loss, another visibility predictor, no SMPL translation predictor anymore, on icap dataset",
+  "test_kid": 1,
+  "model_name": "chore-triplane-vis",
+  "image_size": [
+    1920,
+    1080
+  ],
+  "net_img_size": [
+    512,
+    512
+  ],
+  "camera_params": {
+    "crop_size": 800,
+    "fx": 0.4783633,
+    "fy":0.478352604,
+    "cx":0.498419,
+    "cy":0.28955,
+    "image_width": 1920,
+    "image_height": 1080
+  },
+  "batch_size": 8,
+  "learning_rate": 0.001,
+  "learning_rateC": 0.001,
+  "num_epochs": 80,
+  "num_samples_train": 20000,
+  "multi_gpus": true,
+  "dataset_path": "/scratch/inf0/user/xxie/behave",
+  "split_file": "splits/icap-split-5fps.pkl",
+  "online_sample": true,
+  "clamp_thres": 0.1,
+  "mix_samp": true,
+  "sigmas": [
+    0.08,
+    0.02,
+    0.003
+  ],
+  "person_obj_ratio": [
+    0.5,
+    0.5
+  ],
+  "ratios": [
+    0.01,
+    0.49,
+    0.5
+  ],
+  "loadSize": 800,
+  "name": "chore",
+  "gpu_id": 0,
+  "gpu_ids": [
+    0
+  ],
+  "num_workers": 32,
+  "data_name": "noscale",
+  "sigma": 5.0,
+  "num_sample_inout": 5000,
+  "num_sample_color": 0,
+  "z_size": 200.0,
+  "z_0": 2.2,
+  "model_type": "comb",
+  "input_type": "RGBM3",
+  "encode_type": "normal_hg",
+  "surface_classifier": false,
+  "norm": "group",
+  "norm_color": "instance",
+  "num_stack": 3,
+  "num_hourglass": 2,
+  "skip_hourglass": true,
+  "hg_down": "ave_pool",
+  "hourglass_dim": 256,
+  "use_tanh": false,
+  "random_flip": false,
+  "random_trans": false,
+  "random_scale": false,
+  "no_residual": false,
+  "aug_blur": 0.0,
+  "milestones": [15, 25],
+  "z_feat": "smpl-triplane",
+  "frame_delta": -1,
+  "vis_activation": "sigmoid",
+  "vis_loss": "l2",
+  "loss_weights": [1.0, 1.0, 0.006, 500, 1000, 1000],
+  "triplane_encoder_stack": 3,
+  "triplane_shared_encoder": true,
+  "triplane_hg_dim": 64,
+  "triplane_tmpx_dim": 32,
+  "projection_mode": "perspective",
+  "filter_val": 0.004,
+  "sparse_thres": 0.03,
+  "seq_folder": null
+}

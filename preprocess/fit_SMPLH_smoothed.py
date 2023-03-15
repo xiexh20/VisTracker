@@ -34,15 +34,17 @@ class SMPLHFitterSmoothed(SMPLHFitter30fps):
         reader = FrameDataReader(seq_folder)
         batch_end = reader.cvt_end(end)
 
-        # check if this clip is done
-        done = True
-        for idx in range(start, batch_end):
-            if self.is_done(reader.get_frame_folder(idx), kid) and not redo:
-                continue
-            done = False
-            break
-        if done:
+        # check if this mini-batch is done
+        if self.is_batch_done(start, batch_end, reader, kid, redo):
             return None, None
+        # done = True
+        # for idx in range(start, batch_end):
+        #     if self.is_done(reader.get_frame_folder(idx), kid) and not redo:
+        #         continue
+        #     done = False
+        #     break
+        # if done:
+        #     return None, None
 
         recon_data = joblib.load(osp.join(self.packed_path, f'recon_{smoothed_name}/{reader.seq_name}_k{kid}.pkl'))
         consist = self.check_frame_consistency(recon_data, seq_folder)
@@ -60,10 +62,10 @@ class SMPLHFitterSmoothed(SMPLHFitter30fps):
         return smpl, frame_inds
 
     def get_outfile(self, frame_folder, kid):
-        return osp.join(frame_folder, f'k{kid}.smplfit_smoothed.ply')
+        return osp.join(frame_folder, f'k{kid}.smplfit_smoothed.pkl')
 
     def save_smpl_mesh(self, faces, outfile, ridx, verts):
-        Mesh(verts[ridx].cpu().numpy(), faces).write_ply(outfile)
+        Mesh(verts[ridx].cpu().numpy(), faces).write_ply(outfile.replace('.pkl', '.ply'))
 
     def init_allpose_optimizer(self, smpl_split):
         "optimizer for all poses"
