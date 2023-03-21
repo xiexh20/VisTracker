@@ -8,7 +8,6 @@ import numpy as np
 import torch
 import trimesh
 import pickle as pkl
-from scipy.spatial.transform import Rotation
 import os.path as osp
 
 from data.data_paths import DataPaths, date_seqs
@@ -16,8 +15,6 @@ from data.train_data import BehaveDataset
 from preprocess.boundary_sampler import BoundarySampler
 from lib_smpl.body_landmark import BodyLandmarks
 from behave.kinect_transform import KinectTransform
-from lib_smpl import get_smpl
-from behave.utils import load_template, OBJ_NAMES
 
 
 class BehaveDatasetOnline(BehaveDataset):
@@ -43,12 +40,13 @@ class BehaveDatasetOnline(BehaveDataset):
             self.kin_transforms = {
                 f"ICapS{d:02d}": KinectTransform(date_seqs[f'ICapS{d:02d}'], no_intrinsic=True) for d in range(1,4)
             }
-        # self.smpl_name = 'fit03' if '/BS/xxie-4/static00' in self.data_paths[0] else 'fit02'
-        # self.obj_name = 'fit01-smooth' if '/BS/xxie-4/static00' in self.data_paths[0] else 'fit01'
-        # self.smpl_name = 'fit03'
-        # self.obj_name = 'fit01-smooth'
-        self.smpl_name = 'fit02' if '/BS/xxie-5/static00/behave_release/sequences' in self.data_paths[0] else "fit03"
-        self.obj_name = 'fit01' if '/BS/xxie-5/static00/behave_release/sequences' in self.data_paths[0] else 'fit01-smooth'
+        # specify SMPL and object registration save names
+        # use fit02 (SMPL), fit01 (object) for the original BEHAVE dataset
+        # and fit03, fit01-smooth for the extended BEHAVE dataset
+        dataset_name = kwargs.get('dataset_name', None)
+        assert dataset_name in ["behave", 'extended-behave', 'InterCap'], f'Invalid dataset {dataset_name}!'
+        self.smpl_name = 'fit02' if dataset_name == 'behave' else "fit03"
+        self.obj_name = 'fit01' if dataset_name == 'behave' else 'fit01-smooth'
 
         # sampling setup
         self.grid_ratio = 0.01 # sample points in grids
@@ -56,21 +54,17 @@ class BehaveDatasetOnline(BehaveDataset):
         self.sample_nums = [int((self.total_sample_num-self.total_grid_points)*r) for r in self.ratios] # samples on surface
         self.check_sample_num()
 
-        # to generate SMPL and object from parameters
-        # self.smplh_male = get_smpl('male', True)
-        # self.smplh_female = get_smpl('female', True)
-        # self.smpl_faces = self.smplh_male.faces
-        # self.obj_templates = {name:load_template(name) for name in OBJ_NAMES}
-
         # load occlusion ratios and frame index
         if dataset_name == 'behave':
-            if '/BS/xxie-5/static00/behave_release/sequences' in self.data_paths[0]:
-                self.frame_inds_all = pkl.load(open('splits/behave-1fps-frames.pkl', 'rb'))['frame_inds']
-                self.frame_visibilities = pkl.load(open('assets/behave-1fps-visibility.pkl', 'rb'))
-            else:
-                self.frame_inds_all = pkl.load(open('splits/behave-frames-all.pkl', 'rb'))['frame_inds']
-                self.frame_visibilities = pkl.load(open('assets/behave-30fps-visibility.pkl', 'rb')) # frame visibility ratios
+            # original BEHAVE, only 1fps data
+            self.frame_inds_all = pkl.load(open('splits/behave-1fps-frames.pkl', 'rb'))['frame_inds']
+            self.frame_visibilities = pkl.load(open('assets/behave-1fps-visibility.pkl', 'rb'))
+        elif dataset_name == 'extended-behave':
+            # extended BEHAVE, 30fps data
+            self.frame_inds_all = pkl.load(open('splits/behave-frames-all.pkl', 'rb'))['frame_inds']
+            self.frame_visibilities = pkl.load(open('assets/behave-30fps-visibility.pkl', 'rb'))  # frame visibility ratios
         else:
+            # InterCap dataset visibilities
             self.frame_inds_all = pkl.load(open('splits/intercap-frames-all.pkl', 'rb'))['frame_inds']
             self.frame_visibilities = pkl.load(open('assets/intercap-visibility.pkl', 'rb'))  # frame visibility ratios
 
@@ -134,7 +128,7 @@ class BehaveDatasetOnline(BehaveDataset):
             smpl_file: path to SMPL mesh
             obj_file: path to object mesh
 
-        Returns: a dict containing sampled points and labels
+        Returns: a dict containing sampled points and GT labels
 
         """
         smpl = trimesh.load_mesh(smpl_file, process=False)
@@ -201,45 +195,5 @@ class BehaveDatasetOnline(BehaveDataset):
             data_dict['smpl_vect'] = samples_reorder - np.concatenate(neighbours_h, 0)  # vector from closest smpl surface point to query point
 
         return data_dict
-
-    # def load_meshes(self, rgb_file, smpl_file, obj_file):
-    #     "load parameters and generate meshes"
-    #     start = time.time()
-    #     seq_name = DataPaths.get_seq_name(rgb_file)
-    #     gender = DataPaths.seqname2gender(seq_name)
-    #     body_model = self.smplh_male if gender == 'male' else self.smplh_female
-    #     smpl_params = pkl.load(open(smpl_file.replace('.ply', '.pkl'), 'rb'))
-    #     verts = body_model(torch.from_numpy(smpl_params['pose']).unsqueeze(0),
-    #                        torch.from_numpy(smpl_params['betas']).unsqueeze(0),
-    #                        torch.from_numpy(smpl_params['trans']).unsqueeze(0))[0][0].numpy()
-    #     smpl_mesh = trimesh.Trimesh(verts, self.smpl_faces, process=False)
-    #     obj_params = pkl.load(open(obj_file.replace('.ply', '.pkl'), 'rb'))
-    #     rot = Rotation.from_rotvec(obj_params['angle']).as_matrix()
-    #     obj_name = seq_name.split('_')[2]
-    #     verts_obj = np.matmul(self.obj_templates[obj_name].v, rot.T) + obj_params['trans']
-    #     obj_mesh = trimesh.Trimesh(verts_obj, self.obj_templates[obj_name].f, process=False)
-    #     end = time.time()
-    #     time_params = end - start
-    #
-    #     # sanity check if they match with the real meshes
-    #     start = time.time()
-    #     smpl_gt = trimesh.load_mesh(smpl_file, process=False)
-    #     err = np.mean((smpl_gt.vertices-smpl_mesh.vertices)**2)
-    #     obj_gt = trimesh.load_mesh(obj_file, process=False)
-    #     err2 = np.mean((obj_gt.vertices-obj_mesh.vertices)**2)
-    #     end = time.time()
-    #     # mesh loading is much faster!
-    #     print(f'param time: {time_params:.3f}, mesh load time: {end-start:.3f}')
-    #     assert np.allclose(smpl_gt.vertices, smpl_mesh.vertices, atol=1e-6), smpl_file
-    #     assert np.allclose(obj_gt.vertices, obj_mesh.vertices, atol=1e-6), obj_file
-    #     # print(f"SMPL error: {err:.3f}, equal? {np.allclose(smpl_gt.vertices, smpl_mesh.vertices, atol=1e-6)}, "
-    #     #       f"object error: {err2:.3f}, equal? {np.allclose(obj_gt.vertices, obj_mesh.vertices, atol=1e-6)}")
-    #     return smpl_mesh, obj_mesh
-
-
-
-
-
-
 
 

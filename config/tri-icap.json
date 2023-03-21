@@ -26,6 +26,7 @@
   "num_epochs": 80,
   "num_samples_train": 20000,
   "multi_gpus": true,
+  "dataset_name": "InterCap",
   "dataset_path": "/scratch/inf0/user/xxie/behave",
   "split_file": "splits/icap-split-5fps.pkl",
   "online_sample": true,

@@ -210,16 +210,6 @@ class ReconFitterTriplane(ReconFitterBehave):
                                        image_size=args.net_img_size,
                                        crop_size=args.loadSize,
                                        triplane_type=args.triplane_type)
-        elif args.z_feat == "triplaneNstack2":
-            raise NotImplementedError
-            # input human + object triplane
-            # dataset = BehaveTriplane1ReconTest(image_files, batch_size, min(batch_size, 10),
-            #                        image_size=args.net_img_size,
-            #                        crop_size=args.loadSize,
-            #                        triplane_type=args.triplane_type,
-            #                               noscale=True,
-            #                               load_triplane=True,
-            #                               frame_deltas=args.frame_deltas)
         else:
             raise NotImplementedError
 
@@ -297,7 +287,7 @@ class ReconFitterTriplane(ReconFitterBehave):
         parser.add_argument('-fs', '--start', default=0, type=int, help='start fitting from which frame')
         parser.add_argument('-fe', '--end', default=None, type=int, help='end fitting at which frame')
         parser.add_argument('-tt', '--triplane_type', default='smooth', choices=['gt', 'mocap', 'temporal', "smooth"],
-                            help='use which triplane rendering results, for file names, see data/testdata_triGT.py')
+                            help='use which triplane rendering results, for file names, see data/testdata_triplane.py')
         parser.add_argument('-pat', default='t*', help='pattern to get image files')
         parser.add_argument('-neural_only', default=False, action='store_true', help="Run SIF-Net neural prediction only")
         parser.add_argument('-pred_occ', default=True, action='store_true', help="use predicted occlusion ratio(visibility)")

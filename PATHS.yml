@@ -6,6 +6,7 @@ CODE: "/BS/xxie-4/work/VisTracker" # path to your project main folder
 BEHAVE_PATH: "/BS/xxie-5/static00/behave_release/sequences" # path to the original behave path
 EXTENDED_BEHAVE_PATH: '/BS/xxie-4/static00/test-seq' # root path where 30fps BEHAVE sequences are stored
 GT_PACKED: "/scratch/inf0/user/xxie/behave-packed" # path where packed GT data is saved
+PROCESSED_PATH: "/BS/xxie-5/static00/behave-train" # root path where prepocessed training data are saved
 
 # paths for output reconstruction and visualization
 RECON_PATH: "/scratch/inf0/user/xxie/recon-all" # root path where reconstruction results will be saved

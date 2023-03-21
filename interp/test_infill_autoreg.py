@@ -14,11 +14,10 @@ import torch
 from tqdm import tqdm
 import os.path as osp
 
-from model import MotionInfiller, MotionInfillerMasked, MfillerSlerpOrig
+from model import MotionInfiller, MotionInfillerMasked
 from config.config_loader import load_configs
 from utils.geometry_utils import rot6d_to_rotmat
 from interp.test_infiller import MotionInfillTester
-from utils.geometry_utils import numpy_axis_to_rot6D
 
 
 class MotionInfillAutoreg(MotionInfillTester):
@@ -26,8 +25,6 @@ class MotionInfillAutoreg(MotionInfillTester):
         # assert args.model_name in ['transformer', 'transformer-mask']
         if args.model_name == 'transformer':
             model = MotionInfiller(args).to(self.device)
-        elif args.model_name == 'transformer-slerp':
-            model = MfillerSlerpOrig(args).to(self.device)
         elif args.model_name == 'transformer-mask':
             model = MotionInfillerMasked(args).to(self.device)
         else:

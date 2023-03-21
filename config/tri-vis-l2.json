@@ -17,6 +17,7 @@
   "num_epochs": 80,
   "num_samples_train": 20000,
   "multi_gpus": true,
+  "dataset_name": "extended-behave",
   "dataset_path": "/BS/xxie-4/static00/behave-fps30",
   "split_file": "splits/behave-split-30fps-keyframes.pkl",
   "online_sample": true,
