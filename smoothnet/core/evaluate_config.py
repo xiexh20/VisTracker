@@ -221,7 +221,7 @@ def parse_args():
 
     # find checkpoints
     if args.checkpoint is None:
-        dirs = sorted(glob(f"smoothnet/results/*{args.exp_name}"))[0]
+        dirs = sorted(glob(f"experiments/*{args.exp_name}"))[0]
         ck_file = os.path.join(dirs, 'checkpoint.pth.tar')
         cfg.EVALUATE.PRETRAINED = ck_file
         print(f"Automatically find checkpoint from {ck_file}")

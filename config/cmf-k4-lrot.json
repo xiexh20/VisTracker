@@ -2,6 +2,7 @@
   "exp_name": "cmf-k4-lrot",
   "split_file": "splits/behave-params.pkl",
   "model_name": "cond-transformer",
+  "dataset_path": "/scratch/inf0/user/xxie/behave-packed",
   "info": "less attention layers for both SMPL and object, more layers for joint, use GELU activation function, dropout=0.05, after-norm, rotation only, 4 kinects, larger model",
 
   "num_epochs": 120,
