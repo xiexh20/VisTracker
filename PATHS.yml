@@ -3,6 +3,7 @@
 # Cite: CHORE: Contact, Human and Object REconstruction from a single RGB image, ECCV'2022
 
 CODE: "/BS/xxie-4/work/VisTracker" # path to your project main folder
+BEHAVE_ROOT: "/BS/xxie-5/static00/behave_release" # path to BEHAVE root
 BEHAVE_PATH: "/BS/xxie-5/static00/behave_release/sequences" # path to the original behave path
 EXTENDED_BEHAVE_PATH: '/BS/xxie-4/static00/test-seq' # root path where 30fps BEHAVE sequences are stored
 GT_PACKED: "/scratch/inf0/user/xxie/behave-packed" # path where packed GT data is saved

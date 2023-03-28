@@ -14,7 +14,7 @@ from smoothnet.utils.utils import slide_window_to_sequence
 from smoothnet.utils.geometry_utils import rot6d_to_rotmat, rot6D_to_axis
 from smoothnet.smooth_base import SmootherBase
 import smoothnet.utils.geometry_utils as geom_utils
-from behave.utils import load_template, load_configs_all
+from behave.utils import load_template
 from recon.pca_util import PCAUtil
 
 import yaml

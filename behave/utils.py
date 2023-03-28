@@ -9,6 +9,10 @@ from os.path import join, basename, dirname
 import numpy as np
 import os.path as osp
 from psbody.mesh import Mesh
+import yaml, sys
+with open("PATHS.yml", 'r') as stream:
+    paths = yaml.safe_load(stream)
+BEHAVE_ROOT = paths['BEHAVE_ROOT']
 
 
 def rotate_yaxis(R, t):
@@ -182,9 +186,9 @@ def load_scan_centered(scan_path, cent=True):
     return scan
 
 
-def load_template(obj_name, cent=True, high_reso=False):
+def load_template(obj_name, cent=True, high_reso=False, behave_path=BEHAVE_ROOT):
     "load object template mesh given object name"
-    temp_path = get_template_path("/BS/xxie-5/static00/behave_release/objects", obj_name)
+    temp_path = get_template_path(behave_path+"/objects", obj_name)
     if high_reso:
         assert obj_name in _mesh_template.keys(), f'does not support high reso template for {obj_name}'
         lowreso_temp = Mesh(filename=temp_path)
