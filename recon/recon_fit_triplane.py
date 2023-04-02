@@ -212,7 +212,8 @@ class ReconFitterTriplane(ReconFitterBehave):
             dataset = TestDataTriplane(image_files, batch_size, min(batch_size, 10),
                                        image_size=args.net_img_size,
                                        crop_size=args.loadSize,
-                                       triplane_type=args.triplane_type)
+                                       triplane_type=args.triplane_type,
+                                       dataset_name=args.dataset_name)
         else:
             raise NotImplementedError
 

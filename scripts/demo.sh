@@ -3,7 +3,7 @@
 seq=$1
 recon_name="test-releasev2" # reconstruction save name
 
-# step 1: fit SMPLH to keypoints
+echo "Step 1: fit SMPLH to keypoints"
 python preprocess/fit_SMPLH_30fps.py -s ${seq} -bs 512
 
 # step 2: smooth and fit again

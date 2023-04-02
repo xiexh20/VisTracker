@@ -113,7 +113,8 @@ class ReconFitterTriVisFull(ReconFitterTriplane):
         dataset = TestDataTriplane(image_files, batch_size, min(batch_size, 10),
                                    image_size=args.net_img_size,
                                    crop_size=args.loadSize,
-                                   triplane_type=args.triplane_type)
+                                   triplane_type=args.triplane_type,
+                                   dataset_name=args.dataset_name)
         loader = dataset.get_loader(shuffle=False)
         print(f"In total {len(loader)} batches, {len(image_files)} images")
         return loader
