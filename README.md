@@ -38,9 +38,9 @@ Also, the dataset files should be prepared as described above.
 
 Once done, you can run the demo for one sequence simply by:
 ```shell
-bash scripts/vistracker_pipeline.sh SEQ_FOLDER 
+bash scripts/demo.sh SEQ_FOLDER 
 ```
-example: `bash scripts/vistracker_pipeline.sh /BS/xxie-4/static00/test-seq/Date03_Sub03_chairwood_hand`
+example: `bash scripts/demo.sh /BS/xxie-4/static00/test-seq/Date03_Sub03_chairwood_hand`
 
 It will take around 6~8 hours to finish a sequence of 1500 frames (50s). 
 
