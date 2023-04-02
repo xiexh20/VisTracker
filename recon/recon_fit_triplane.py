@@ -48,7 +48,7 @@ class ReconFitterTriplane(ReconFitterBehave):
             start_time = time.time()
             torch.cuda.empty_cache()
             if self.is_done(data['path'], args.save_name, args.test_kid, args.neural_only) and not args.redo:
-                print(data['path'], args.save_name, 'already done, skipped')
+                print(f"{data['path'][0]}-{data['path'][-1]}", args.save_name, 'already done, skipped')
                 continue
             self.check_data(data)
             pc_generated = self.generate_all(args, data, generator)
