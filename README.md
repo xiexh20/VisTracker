@@ -1,7 +1,7 @@
 # VisTracker (CVPR'23)
 #### Official implementation for the CVPR 2023 paper: Visibility Aware Human-Object Interaction Tracking from Single RGB Camera
 
-[[ArXiv]](https://arxiv.org/abs/2204.02445) [[Project Page]](http://virtualhumans.mpi-inf.mpg.de/chore)
+[[ArXiv]](https://arxiv.org/abs/2303.16479) [[Project Page]](http://virtualhumans.mpi-inf.mpg.de/VisTracker/)
 
 <p align="left">
 <img src="https://datasets.d2.mpi-inf.mpg.de/cvpr23vistracker/teaser.png" alt="teaser" width="512"/>
@@ -14,6 +14,7 @@
 4. [Training](#training)
 5. [Evaluation](#evaluation)
 5. [Citation](#citation)
+6. [Acknowledgements](#acknowledgements)
 6. [License](#license)
 
 ## Dependencies
@@ -43,7 +44,7 @@ example: `bash scripts/vistracker_pipeline.sh /BS/xxie-4/static00/test-seq/Date0
 
 It will take around 6~8 hours to finish a sequence of 1500 frames (50s). 
 
-Tips: the runtime bottlenecks are the SMPL-T pre-fitting (step 1-2) and joint optimization (step 6) in `scripts/demo.sh`. If you have a cluster with multiple GPU machines, you can run multiple sequences in parallel by specifying the `--start` and `--end` option for these commands. This will separate one long sequence into several chunks and each job only optimizes the chunk specified by start and end frames. 
+Tips: the runtime bottlenecks are the SMPL-T pre-fitting (step 1-2) and joint optimization (step 6) in `scripts/demo.sh`. If you have a cluster with multiple GPU machines, you can run multiple sequences/jobs in parallel by specifying the `--start` and `--end` option for these commands. This will separate one long sequence into several chunks and each job only optimizes the chunk specified by start and end frames. 
 
 ## Training 
 Train a SIF-Net model:
@@ -58,7 +59,7 @@ Train  motion infill model:
 ```shell
 python -m torch.distributed.launch --nproc_per_node=NUM_GPU --master_port 6787 --use_env train_mfiller.py -en cmf-k4-lrot
 ```
-For this, you need to specify the path to all packed GT files. 
+For this, you need to specify the path to all packed GT files downloaded from the link mentioned above. i.e.: [train part1](https://datasets.d2.mpi-inf.mpg.de/cvpr22behave/behave-packed-train-seqs-p1.zip), [train part 2](https://datasets.d2.mpi-inf.mpg.de/cvpr22behave/behave-packed-train-seqs-p2.zip), [test seqs](https://datasets.d2.mpi-inf.mpg.de/cvpr22behave/behave-packed-test-seqs.zip).  
 
 
 ## Evaluation
@@ -89,6 +90,26 @@ If you use BEHAVE dataset, please also cite:
     year = {2022},
     }
 ```
+
+## Acknowledgements 
+This project leverages the following excellent works, we thank the authors for open-sourcing their code: 
+
+[FrankMocap](https://github.com/facebookresearch/frankmocap)
+
+[Openpose](https://github.com/CMU-Perceptual-Computing-Lab/openpose)
+
+[SmoothNet](https://ailingzeng.site/smoothnet)
+
+[Conditional motion infilling](https://github.com/jihoonerd/Conditional-Motion-In-Betweening)
+
+[Interactive segmentation](https://github.com/SamsungLabs/ritm_interactive_segmentation)
+
+[Video segmentation](https://github.com/hkchengrex/MiVOS)
+
+[DetectronV2](https://github.com/facebookresearch/detectron2)
+
+
+
 
 ## License
 Copyright (c) 2023 Xianghui Xie, Max-Planck-Gesellschaft
