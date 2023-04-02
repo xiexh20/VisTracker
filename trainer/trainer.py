@@ -1,6 +1,10 @@
 """
+adapted from CHORE: Contact, Human and Object REconstruction from a single RGB image. ECCV'2022
+
 Author: Xianghui Xie
-Cite: CHORE: Contact, Human and Object REconstruction from a single RGB image. ECCV'2022
+Date: April 02, 2023
+Cite: Visibility Aware Human-Object Interaction Tracking from Single RGB Camera. CVPR'2023
+
 """
 from __future__ import division
 

@@ -2,6 +2,10 @@
 a base renderer class for recon visualization
 this renderer renders human and object in the same color, but different reconstructions in different colors
 to render human and object of the same recon in different colors, using render_side_comp.py
+
+Author: Xianghui Xie
+Date: March 29, 2023
+Cite: Visibility Aware Human-Object Interaction Tracking from Single RGB Camera. CVPR'2023
 """
 import copy
 import sys, os

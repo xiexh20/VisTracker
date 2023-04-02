@@ -1,5 +1,9 @@
 """
 use simple transformer to infill motions
+
+Author: Xianghui Xie
+Date: April 02, 2023
+Cite: Visibility Aware Human-Object Interaction Tracking from Single RGB Camera. CVPR'2023
 """
 from typing import Optional
 import torch

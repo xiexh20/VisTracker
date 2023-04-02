@@ -1,5 +1,9 @@
 """
 init SMPLH parameters from smoothed SMPL
+
+Author: Xianghui Xie
+Date: March 29, 2023
+Cite: Visibility Aware Human-Object Interaction Tracking from Single RGB Camera. CVPR'2023
 """
 import pickle
 import sys, os

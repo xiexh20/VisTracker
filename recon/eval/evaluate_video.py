@@ -1,5 +1,9 @@
 """
 compute metrics for video
+
+Author: Xianghui Xie
+Date: April 02, 2023
+Cite: Visibility Aware Human-Object Interaction Tracking from Single RGB Camera. CVPR'2023
 """
 import sys, os
 
@@ -10,6 +14,7 @@ from psbody.mesh import Mesh
 import numpy as np
 from os.path import basename
 from scipy.spatial.transform import Rotation
+import os.path as osp
 
 from recon.recon_data import ReconDataReader
 from recon.eval.pose_utils import compute_transform
@@ -38,7 +43,7 @@ class VideoEvaluator(ReconEvaluator):
         obj_verts_recon, obj_verts_gt = [], []
         smpl_acc, obj_acc = [], []
         if high_reso:
-            lowreso_path = opt_utils.get_template_path("/BS/xxie-5/static00/behave_release/objects",
+            lowreso_path = opt_utils.get_template_path(osp.join(paths['BEHAVE_ROOT'], 'objects'),
                                                        reader.seq_info.get_obj_name())
             lowreso_temp = opt_utils.load_scan_centered(lowreso_path, cent=False)
             highreso_path = opt_utils.orig_scan[reader.seq_info.get_obj_name()].replace('.ply', '_f12000.ply')
@@ -71,11 +76,6 @@ class VideoEvaluator(ReconEvaluator):
                 raise NotImplemented
             if smpl_recon is None:
                 continue
-            # align it with mocap fits
-            # mocap_fit = Mesh(filename=osp.join(reader.get_frame_folder(i), "k1.smplfit_kpt.ply"))
-            # mrot, mtrans, mscale, _ = compute_transform(smpl_recon.v, mocap_fit.v)
-            # smpl_recon.v = (mscale *mrot.dot(smpl_recon.v.T) + mtrans).T
-            # obj_recon.v = (mscale * mrot.dot(obj_recon.v.T) + mtrans).T
 
             if high_reso:
                 # convert object recon and GT to high-reso template

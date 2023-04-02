@@ -54,6 +54,7 @@ python -m torch.distributed.launch --nproc_per_node=NUM_GPU --master_port 6789 -
 Note that to train this model, you also need to prepare the GT registrations (meshes) in order to run online boundary sampling during training. We provide an example script to save SMPL and object meshes from packed parameters:
 `python tools/pack2separate_params.py -s SEQ_FOLDER -p PACKED_PATH`, similar to `tools/pack2separate.py`. The packed training data for this can be downloaded from [here (part1)](https://datasets.d2.mpi-inf.mpg.de/cvpr22behave/behave-packed-train-seqs-p1.zip) and [here (part2)](https://datasets.d2.mpi-inf.mpg.de/cvpr22behave/behave-packed-train-seqs-p2.zip)
 
+In addition, the split files, frame times and visibility information should also be downloaded from [here](https://datasets.d2.mpi-inf.mpg.de/cvpr23vistracker/behave-splits.zip) and extracted in the subfolder `splits`. 
 
 Train  motion infill model:
 ```shell

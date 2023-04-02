@@ -1,5 +1,9 @@
 """
 train motion infill models
+
+Author: Xianghui Xie
+Date: March 29, 2023
+Cite: Visibility Aware Human-Object Interaction Tracking from Single RGB Camera. CVPR'2023
 """
 import sys, os
 sys.path.append(os.getcwd())
@@ -10,7 +14,7 @@ from utils.dist_utils import init_distributed_mode
 import pickle as pkl
 import os.path as osp
 
-from model import MotionInfiller, ConditionalMInfiller, CondMInfillerV2, CondMInfillerV2Mask, MotionInfillerMasked
+from model import MotionInfiller, ConditionalMInfiller
 from data import TrainDataMotionFiller, TrainDataCMotionFiller
 from trainer import TrainerInfiller, TrainerCInfiller
 
@@ -25,14 +29,8 @@ def launch_train(args):
     # prepare model
     if args.model_name == 'transformer':
         model = MotionInfiller(args).to(device)
-    elif args.model_name == 'transformer-mask':
-        model = MotionInfillerMasked(args).to(device)
     elif args.model_name == 'cond-transformer':
         model = ConditionalMInfiller(args).to(device)
-    elif args.model_name == 'cond-transformer-v2':
-        model = CondMInfillerV2(args).to(device)
-    elif args.model_name == 'cond-transformer-v2mask':
-        model = CondMInfillerV2Mask(args).to(device)
     else:
         raise ValueError(f"Unknown model name {args.model_name}")
     ddp_mp_model = DDP(model, device_ids=[rank], find_unused_parameters=True)  # this is required
@@ -45,7 +43,7 @@ def launch_train(args):
     if args.model_name in ['transformer', 'transformer-mask']:
         dataset_type = TrainDataMotionFiller
         trainer_type = TrainerInfiller
-    elif args.model_name in ['cond-transformer', 'cond-transformer-v2', 'cond-transformer-v2mask']:
+    elif args.model_name in ['cond-transformer']:
         dataset_type = TrainDataCMotionFiller
         trainer_type = TrainerCInfiller
     else:
@@ -84,8 +82,6 @@ def launch_train(args):
                               multi_gpus=True,
                               rank=rank,
                               world_size=world_size,
-                              # threshold=args.clamp_thres,
-                              # input_type=args.input_type,
                               lr=args.learning_rate,
                               ck_period=30 if 'ck_period' not in args else args.ck_period,
                               milestones=args.milestones,

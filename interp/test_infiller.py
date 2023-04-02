@@ -1,5 +1,9 @@
 """
 simple test motion infiller
+
+Author: Xianghui Xie
+Date: April 02, 2023
+Cite: Visibility Aware Human-Object Interaction Tracking from Single RGB Camera. CVPR'2023
 """
 import sys, os
 sys.path.append(os.getcwd())
@@ -12,7 +16,7 @@ import os.path as osp
 import numpy as np
 import json
 from config.config_loader import load_configs
-from model import MotionInfiller, MotionInfillerMasked, CondMInfillerV2, CondMInfillerV2Mask
+from model import MotionInfiller
 from trainer.train_utils import load_checkpoint
 from utils.geometry_utils import numpy_axis_to_rot6D, numpy_rotmat_to_6d
 from utils.mfill_utils import slide_window_to_sequence

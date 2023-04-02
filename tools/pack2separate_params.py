@@ -1,6 +1,10 @@
 """
 load SMPL and object parameters from packed pkl file (extended BEHAVE data)
 save SMPL and object registration (meshes) in BEHAVE data format
+
+Author: Xianghui Xie
+Date: April 02, 2023
+Cite: Visibility Aware Human-Object Interaction Tracking from Single RGB Camera. CVPR'2023
 """
 import os, sys
 

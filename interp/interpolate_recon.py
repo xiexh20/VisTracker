@@ -1,6 +1,10 @@
 """
 interpolate the reconstructed object rotation and/or translation,
 based on occlusion ratios
+
+Author: Xianghui Xie
+Date: April 02, 2023
+Cite: Visibility Aware Human-Object Interaction Tracking from Single RGB Camera. CVPR'2023
 """
 import sys, os
 

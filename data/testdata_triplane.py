@@ -2,6 +2,10 @@
 in addition to existing test data items, also load triplane, as well
 as body center computed from SMPL fits or FrankMocap Fits (SMPL-T meshes)
 no depth-dependent resizing of the test patch
+
+Author: Xianghui Xie
+Date: April 02, 2023
+Cite: Visibility Aware Human-Object Interaction Tracking from Single RGB Camera. CVPR'2023
 """
 import sys, os
 sys.path.append(os.getcwd())

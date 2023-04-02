@@ -3,7 +3,8 @@ use torch.distributed.launch to start training
 modified from: https://github.com/WZMIAOMIAO/deep-learning-for-image-processing/tree/master/pytorch_classification/train_multi_GPU
 
 Author: Xianghui Xie
-Cite: CHORE: Contact, Human and Object REconstruction from a single RGB image. ECCV'2022
+Date: March 29, 2023
+Cite: Visibility Aware Human-Object Interaction Tracking from Single RGB Camera. CVPR'2023
 """
 import sys, os
 sys.path.append(os.getcwd())

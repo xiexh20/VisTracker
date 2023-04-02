@@ -1,5 +1,9 @@
 """
 checkerboard class suitable for nueral_renderer
+
+Author: Xianghui Xie
+Date: March 29, 2023
+Cite: Visibility Aware Human-Object Interaction Tracking from Single RGB Camera. CVPR'2023
 """
 from psbody.mesh import Mesh
 import torch

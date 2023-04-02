@@ -1,7 +1,9 @@
 """
 autoregressive motion infiller
 
-runtime performance: 0.00131-0.00173s
+Author: Xianghui Xie
+Date: April 02, 2023
+Cite: Visibility Aware Human-Object Interaction Tracking from Single RGB Camera. CVPR'2023
 """
 import json
 import sys, os, time 
@@ -14,7 +16,7 @@ import torch
 from tqdm import tqdm
 import os.path as osp
 
-from model import MotionInfiller, MotionInfillerMasked
+from model import MotionInfiller
 from config.config_loader import load_configs
 from utils.geometry_utils import rot6d_to_rotmat
 from interp.test_infiller import MotionInfillTester
@@ -25,8 +27,6 @@ class MotionInfillAutoreg(MotionInfillTester):
         # assert args.model_name in ['transformer', 'transformer-mask']
         if args.model_name == 'transformer':
             model = MotionInfiller(args).to(self.device)
-        elif args.model_name == 'transformer-mask':
-            model = MotionInfillerMasked(args).to(self.device)
         else:
             raise ValueError(f"Unknown model name {args.model_name}")
         return model

@@ -1,6 +1,10 @@
 """
 full optimization pipeline for trivis model
 load triplane from smoothed SMPL and object from another recon, do joint optimization
+
+Author: Xianghui Xie
+Date: April 02, 2023
+Cite: Visibility Aware Human-Object Interaction Tracking from Single RGB Camera. CVPR'2023
 """
 import sys, os
 sys.path.append(os.getcwd())
@@ -17,7 +21,6 @@ from tqdm import tqdm
 from model import CHORETriplaneVisibility
 from recon.gen.generator_vis import GeneratorTriplaneVis
 
-# from recon.recon_fit_triGTposeV3 import ReconFitterTriplaneGTposeV3
 from recon.obj_pose_roi import SilLossROI
 from recon.recon_fit_triplane import ReconFitterTriplane
 from lib_smpl.smpl_generator import SMPLHGenerator

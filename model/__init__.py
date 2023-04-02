@@ -4,7 +4,4 @@ from model.chore_tri_vis import CHORETriplaneVisibility
 
 # motion infill models
 from .infill.mfiller_cond import ConditionalMInfiller
-from .infill.mfiller_condv2 import CondMInfillerV2
-from .infill.mfiller_condv2mask import CondMInfillerV2Mask
 from .infill.motion_infiller import MotionInfiller
-from .infill.mfiller_v1mask import MotionInfillerMasked

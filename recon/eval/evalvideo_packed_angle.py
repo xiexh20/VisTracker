@@ -1,5 +1,9 @@
 """
-evaluate rotation as angles 
+evaluate rotation as angles
+
+Author: Xianghui Xie
+Date: April 02, 2023
+Cite: Visibility Aware Human-Object Interaction Tracking from Single RGB Camera. CVPR'2023
 """
 import sys, os
 
@@ -9,7 +13,7 @@ sys.path.append(os.getcwd())
 import os.path as osp
 from scipy.spatial.transform import Rotation
 from psbody.mesh import Mesh
-from recon.eval.evalvideo_packed import VideoPackedEvaluator, gtpack_path
+from recon.eval.evalvideo_packed import VideoPackedEvaluator, gtpack_path, paths
 from behave.utils import load_template
 from recon.eval.pose_utils import compute_transform, rot_error
 from lib_smpl import SMPL_Layer
@@ -27,7 +31,7 @@ class VideoPackedAngleEvaluator(VideoPackedEvaluator):
         # prepare SMPL and object template
         tid = 1 if 'Date0' in seq_name else 0
         temp = load_template(seq_info.get_obj_name())
-        smplh_layer = SMPL_Layer(model_root='/BS/xxie2020/static00/mysmpl/smplh',
+        smplh_layer = SMPL_Layer(model_root=paths['SMPL_MODEL_ROOT'],
                                  gender='male', hands=True)
         # prepare recon data
         high_reso = False  # if high reso: convert object to high reso template
@@ -157,9 +161,7 @@ def main(args):
     import yaml
     with open("PATHS.yml", 'r') as stream:
         paths = yaml.safe_load(stream)
-    # BEHAVE_PATH = paths['BEHAVE_PATH']
-    BEHAVE_PATH = '/BS/xxie-4/static00/behave-fps30'
-    BEHAVE_PATH = '/scratch/inf0/user/xxie/behave'
+    BEHAVE_PATH = paths['BEHAVE_PATH']
     RECON_PATH = paths['RECON_PATH']
 
     evaluator = VideoPackedAngleEvaluator(RECON_PATH, BEHAVE_PATH, smpl_only = args.id == 'smpl')

@@ -5,7 +5,8 @@ if code works:
     Author: Xianghui Xie
 else:
     Author: Anonymous
-Cite: CHORE: Contact, Human and Object REconstruction from a single RGB image. ECCV'2022
+Date: March 29, 2023
+Cite: Visibility Aware Human-Object Interaction Tracking from Single RGB Camera. CVPR'2023
 """
 import numpy as np
 import trimesh

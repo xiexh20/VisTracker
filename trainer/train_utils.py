@@ -1,5 +1,9 @@
 """
 utils for training, model loading and saving
+
+Author: Xianghui Xie
+Date: April 02, 2023
+Cite: Visibility Aware Human-Object Interaction Tracking from Single RGB Camera. CVPR'2023
 """
 import torch
 import sys, os

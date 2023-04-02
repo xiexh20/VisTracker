@@ -2,6 +2,10 @@
 seperate transformers on SMPL and objects, SMPL is non-mask but object is masked
 then transformer on concatenated features, and finally predict
 i.e. conditional motion infiller
+
+Author: Xianghui Xie
+Date: April 02, 2023
+Cite: Visibility Aware Human-Object Interaction Tracking from Single RGB Camera. CVPR'2023
 """
 from typing import Optional
 import torch

@@ -3,7 +3,11 @@ packed openpose and mocap results to separate files in each frame in BEHAVE data
 mocap: only save the parameters, not meshes
     keywords: pose, betas 
 openpose: save as json files 
-    keywords: body_joints, face_joints, left_hand_joints, right_hand_joints 
+    keywords: body_joints, face_joints, left_hand_joints, right_hand_joints
+
+Author: Xianghui Xie
+Date: April 02, 2023
+Cite: Visibility Aware Human-Object Interaction Tracking from Single RGB Camera. CVPR'2023
 """
 import os, sys
 sys.path.append(os.getcwd())

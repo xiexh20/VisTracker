@@ -1,6 +1,10 @@
 """
 pack SMPL-T fitting results, suitable for both BEHAVE and InterCap dataset
 for InterCap: should specify test id as 0 
+
+Author: Xianghui Xie
+Date: March 29, 2023
+Cite: Visibility Aware Human-Object Interaction Tracking from Single RGB Camera. CVPR'2023
 """
 import sys, os
 sys.path.append(os.getcwd())

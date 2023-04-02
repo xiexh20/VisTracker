@@ -1,6 +1,8 @@
 """
 two smoothnet, one for SMPL pose and another for global translation
 they are identical
+
+adapted from https://github.com/cure-lab/SmoothNet
 """
 import torch.nn as nn
 from torch import Tensor
