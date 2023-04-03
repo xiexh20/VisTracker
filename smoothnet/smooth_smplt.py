@@ -25,7 +25,7 @@ import smoothnet.utils.geometry_utils as geom_utils
 class SMPLTSmoother(SmootherBase):
     def post_processing(self, data, denoised, input_pred):
         """
-        post process network output, return a data disect ready for save
+        post process network output, return a data directly ready for save
         Args:
             data:
             denoised:
@@ -132,22 +132,6 @@ class SMPLTSmoother(SmootherBase):
             trans: Tx3
 
         """
-
-        # reader = FrameDataReader(seq_folder, check_image=False)
-        # seq_name = osp.basename(seq_folder)
-        # file = "/scratch/inf0/user/xxie/mocap-packed/Date03_Sub03_chairblack_lift_temporal-fit.pkl"
-        # assert seq_name in file
-        # # load from packed file
-        # packed_data = joblib.load(file)
-        # data_dict = {
-        #     "poses":packed_data['poses'],
-        #     "betas":packed_data['betas'],
-        #     'trans':packed_data['trans'],
-        #
-        #     'gender': reader.seq_info.get_gender(),
-        #     "frames":packed_data['frames']
-        # }
-
         reader = FrameDataReader(seq_folder, check_image=False)
         tri_poses, tri_betas, tri_trans = [], [], []
         loop = tqdm(range(0, len(reader)))

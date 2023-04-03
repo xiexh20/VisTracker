@@ -1,5 +1,9 @@
 """
 for the model that predicts visibility score
+
+Author: Xianghui Xie
+Date: April 02, 2023
+Cite: Visibility Aware Human-Object Interaction Tracking from Single RGB Camera. CVPR'2023
 """
 import sys, os
 sys.path.append(os.getcwd())
@@ -12,35 +16,12 @@ class GeneratorTriplaneVis(GeneratorTriplane):
         "additional visibility predictor"
         return ['points', 'pca_axis', 'parts', 'centers', "visibility"]
 
-    # def parse_preds(self, batch_size, counts, mask, out_dict, out_names, preds, samples_surface):
-    #     """
-    #     here the initial pose predictions are None
-    #     out_names = ['points', 'pca_axis', 'parts', 'centers', 'visibility']
-    #     """
-    #     for i in range(batch_size):
-    #         # add points
-    #         out_dict['points'][i].append(samples_surface[i, mask[i]].detach().cpu())
-    #         # handle each example separately
-    #         for name, pred in zip(out_names[1:], preds[1:]):
-    #             if name == 'parts':
-    #                 out_dict[name][i].append(pred[i, ..., mask[i]].detach().cpu())
-    #             else:
-    #                 # no centers prediction for now, just append zeros
-    #                 L = int(torch.sum(mask[i]))
-    #                 if name == 'pca_axis':
-    #                     out_dict[name][i].append(torch.zeros(3, 3, L))
-    #                 elif name == 'centers':
-    #                     out_dict[name][i].append(torch.zeros(6, L))
-    #                 else:
-    #                     raise ValueError(f"Unknown output name: {name}")
-    #         counts.append(torch.sum(mask[i]).item())  # count how many new points are added
-
     def compose_outdict(self, batch_size, out_dict, out_names, samples_count,
                         obj_mask=False, query_input=None):
         """query object poses here
         out_names = ['points', 'pca_axis', 'parts', 'centers', 'visibility']
         for each output, the shape is (B, ...)
-        e.g. visibility: (B, 1), pca: (B, 3, 3)
+        e.g. visibility: (B, 1), pca: (B, 3, 3), parts: (B, K)
         """
         for name in out_names:
             out_batch = out_dict[name]

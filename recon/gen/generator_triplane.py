@@ -1,5 +1,9 @@
 """
 use SMPL triplane rendering as additional feature
+
+Author: Xianghui Xie
+Date: April 02, 2023
+Cite: Visibility Aware Human-Object Interaction Tracking from Single RGB Camera. CVPR'2023
 """
 import sys, os
 sys.path.append(os.getcwd())
@@ -11,6 +15,7 @@ class GeneratorTriplane(Generator):
     def prep_query_input(self, batch):
         """
         in addition to the crop center, send also the body center to query
+        which is used in the triplane projection
         Args:
             batch: batch data from data loader
 

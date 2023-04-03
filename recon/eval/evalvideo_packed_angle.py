@@ -132,10 +132,6 @@ class VideoPackedAngleEvaluator(VideoPackedEvaluator):
             obj_verts_recon.append(recon_aligned[1].v)
             obj_verts_gt.append(gt_meshes[1].v)
 
-            # err_chamf = self.compute_errors(gt_meshes, recon_aligned, v2v=False)
-            # err_v2v = self.compute_errors(gt_meshes, recon_aligned, v2v=True)
-            # errors_all.append(np.concatenate([np.array(err_chamf[:2]), np.array(err_v2v[:2])]))
-
             # apply alignment and compute rotation angle error 
             rot_gt_i = np.matmul(arot, rot_gt[i])
             rot_recon_i = np.matmul(arot, rot_recon[i])

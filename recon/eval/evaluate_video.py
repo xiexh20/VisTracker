@@ -26,6 +26,7 @@ with open("PATHS.yml", 'r') as stream:
 BEHAVE_PATH = paths['BEHAVE_PATH']
 RECON_PATH = paths['RECON_PATH']
 
+
 class VideoEvaluator(ReconEvaluator):
     def eva_seq(self, seq, save_name, tid, etype='ours', smpl_only=False):
         "find rotation, scale and translation from the first frame, then apply it to all other frames"
@@ -154,22 +155,6 @@ class VideoEvaluator(ReconEvaluator):
         acc = torch.mean(normed)
 
         return float(acc*100) # convert to cm
-
-    # def format_errors(self, errors, print_summary=False):
-    #     "errors: (N, 5)"
-    #     results = {}
-    #     L = errors.shape[1]
-    #     # names = ['smpl', 'obj', 'comb']
-    #     names = ['smpl', 'obj', 'dummy', 'smpl-acc', 'obj-acc']
-    #     for i in range(len(names)):
-    #         name = names[i]
-    #         avg = np.mean(errors[:, i]).item()
-    #         std = np.std(errors[:, i]).item()
-    #         results[name] = {'mean':avg, 'std':std}
-    #     results['total'] = len(errors)
-    #     if print_summary:
-    #         print(results)
-    #     return results
 
     def get_error_keys(self):
         "Including acceleration errors"

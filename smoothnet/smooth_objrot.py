@@ -73,7 +73,7 @@ class ObjrotSmoother(SmootherBase):
 
     def preprocess_input(self, raw_data):
         """
-        convert object rotation into rot6D representation
+        convert object rotation matrix into rot6D representation
         Args:
             raw_data:
 
@@ -94,7 +94,7 @@ class ObjrotSmoother(SmootherBase):
 
     def post_processing(self, data, denoised, input_pred):
         """
-
+        convert denoised rot6d into rotation matrix representation
         Args:
             data: preprocessed data
             denoised: (B, T, 6) denoised object rotation as 6D representation

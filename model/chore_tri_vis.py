@@ -30,11 +30,12 @@ class CHORETriplaneVisibility(CHORETriplane):
 
     def decode(self, features):
         """
-
+        also predict object visibility
         Args:
             features: (B, F, N)
 
         Returns:
+            (B, D, N), where D is the output dimension
 
         """
         df = self.df(features)
@@ -43,9 +44,6 @@ class CHORETriplaneVisibility(CHORETriplane):
         parts = self.part_predictor(features)
 
         centers = self.center_predictor(features) # (B, 3, N)
-        # nan_values = torch.zeros_like(centers).to(centers.device)
-        # nan_values[:] = float('nan')
-        # centers = torch.cat([nan_values, centers], 1) # backward compatibility, this should never be used
 
         vis = self.visib_predictor(features) # (B, 1, N)
 

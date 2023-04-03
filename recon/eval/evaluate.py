@@ -128,6 +128,7 @@ class ReconEvaluator:
         compute chamfer distance between surface point samples
         :param gt_meshes: ground truth SMPL and object mesh
         :param aligned: reconstructed SMPL and object mesh, after procrustes alignment
+        :param v2v: compute v2v error or Chamfer distance
         :return: chamfer distance of human and object
         """
         if v2v:

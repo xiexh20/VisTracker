@@ -30,12 +30,12 @@ class VideoPackedEvaluator(VideoEvaluator):
     def eva_seq(self, seq, save_name, tid, etype='ours', smpl_only=False,
                 args=None):
         """
-        load GT and recon from packed data
+        load GT and recon from packed data, and then compute errors
         Args:
             seq: full path to one seq folder
             save_name: reconstruction save name
             tid: test kinect id
-            etype:
+            etype: evaluation type, not used anymore
             smpl_only: evaluate SMPL only or not
             args: other configurations
 
@@ -94,8 +94,7 @@ class VideoPackedEvaluator(VideoEvaluator):
             recon_exist = data_recon['recon_exist']
         frame_times = data_recon['frames']
 
-        # evaluate key frames only
-        # fps = 10
+        # fps = 10 # evaluate key frames only
         fps = 1
         sverts_gt, overts_gt = sverts_gt[::fps], overts_gt[::fps]
         sverts_recon, overts_recon = sverts_recon[::fps], overts_recon[::fps]
@@ -158,7 +157,6 @@ class VideoPackedEvaluator(VideoEvaluator):
                 # print('computing acceleration error')
 
         errors_all = np.array(errors_all)
-        # append acceleration errors
         accs = np.expand_dims(np.concatenate(smpl_acc), 1)
         acco = np.expand_dims(np.concatenate(obj_acc), 1)
 
