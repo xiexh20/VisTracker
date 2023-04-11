@@ -7,6 +7,8 @@
 <img src="https://datasets.d2.mpi-inf.mpg.de/cvpr23vistracker/teaser.png" alt="teaser" width="512"/>
 </p>
 
+## Please also check our old ECCV'22 work CHORE [here](https://github.com/xiexh20/CHORE). 
+
 ## Contents 
 1. [Dependencies](#dependencies)
 2. [Dataset preparation](#dataset-preparation)
