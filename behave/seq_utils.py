@@ -58,8 +58,8 @@ class SeqInfo:
                 path = join(seq, data[name])
                 if not isdir(path):
                     path = data[name] # abs path
-                    if "Date0" in seq or "ICap" in seq:  # check config path for behave and intercap dataset
-                        assert isdir(path), f'given path {path} does not exist!'
+                    # if "Date0" in seq or "ICap" in seq:  # check config path for behave and intercap dataset
+                    #     assert isdir(path), f'given path {path} does not exist!'
                 data[name] = path
         return data
 
