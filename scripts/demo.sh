@@ -8,6 +8,8 @@ NC=$'\e[0m'
 seq=$1
 recon_name="test-releasev2" # reconstruction save name
 
+set -e
+
 echo "${RED} VisTracker demo step 1/7: fit SMPLH to keypoints ${NC}"
 python preprocess/fit_SMPLH_30fps.py -s ${seq} -bs 512
 
