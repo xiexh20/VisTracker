@@ -36,7 +36,10 @@ We work on the extended BEHAVE dataset, to have the dataset ready, you need to d
 ## Run demo 
 You can find all the commands of the pipeline in `scripts/demo.sh`. To run it, you need to download the pretrained models from [here](https://datasets.d2.mpi-inf.mpg.de/cvpr23vistracker/models.zip) and unzip them in the folder `experiments`. 
 
-Also, the dataset files should be prepared as described above. 
+Also, the dataset files should be prepared as described above. For convenience, we prepare example data of one sequence in [this file](https://datasets.d2.mpi-inf.mpg.de/cvpr23vistracker/vistracker-demo-data.zip). You can download it and extract to some directory and then modify `EXTTENDED_PATH`, `GT_PACKED` in `PATHS.yml`
+accordingly. 
+
+You also need to download the SMPL-H model from the [official website](https://mano.is.tue.mpg.de/). We use the manov1.2 model for the SMPL-H model.
 
 Once done, you can run the demo for one sequence simply by:
 ```shell
