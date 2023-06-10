@@ -210,21 +210,6 @@ class Generator:
             if iter == max_iter:
                 raise RuntimeError(f'point generation for df {df_type} failed after 100 iterations for files: {batch["path"]}')
 
-        # import datetime
-        # assert '2022-08-17' in str(datetime.datetime.now()), 'check projection mask'
-        # # project points to object mask
-        # points = out_dict['points'] # B list of points (N_p, 3)
-        # out_dict['obj_mask'] = []
-        # crop_center = batch.get('crop_center')  # (B, 3)
-        # for i in range(batch_size):
-        #     obj_mask = batch['images'][i:i+1, 4:5]
-        #     points_all = torch.cat(points[i], 0)
-        #     xyz = self.model.project_points(points_all.unsqueeze(0), crop_center[i:i+1])
-        #     feat = self.model.index(obj_mask, xyz[:, :2, :])
-        #     inside = feat > 0.5 # (1, 1, N)
-        #     print(f"Total points: {points_all.shape[0]}, overlapped: {torch.sum(inside)}")
-        #     out_dict['obj_mask'].append(inside.squeeze(0).squeeze(0))
-
         out_dict = self.compose_outdict(batch_size, out_dict, out_names, samples_count,
                              obj_mask=False, query_input=query_input)
         return out_dict

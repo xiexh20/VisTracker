@@ -171,30 +171,6 @@ def setup_siderenderer(camera_distance, elevation, azimuth):
 
     R = torch.cuda.FloatTensor([[[1, 0, 0], [0, 1, 0], [0, 0, 1]]])
     t = torch.zeros(1, 3).cuda()
-    # t[0, 2] = -1.0 # neural renderer's look at is different from pytorch3d's look at
-    # t[0, 0] = -3.6 # t does not matter for look_at mode
-    # renderer = nr.Renderer(camera_mode='look_at', R=R, t=t, image_size=IMAGE_SIZE, K=K)
-
-    # renderer.eye = nr.get_points_from_angles(camera_distance, elevation, azimuth)
-    # eye = nr.get_points_from_angles(camera_distance, elevation, azimuth)
-    # eye_np = np.array(eye)
-    # eye_np += np.array([0,0,-2.5]) # shift left
-    # eye_np += np.array([-1, 0, -2.])
-
-    # look at (-0.1, 0.28, 1.68), d=2.0, ele=60, azim=45
-    # R=torch.cuda.FloatTensor([[[-0.7071, -0.6124, -0.3536], [0.0000,  0.5000, -0.8660], [0.7071, -0.6124, -0.3536]]])
-    # t = torch.cuda.FloatTensor([[-1.2587,  0.8275,  2.8011]])
-
-    # d=3.0, ele=45, azim=90
-    # R = torch.cuda.FloatTensor([[[5.6196e-08, -7.0711e-01, -7.0711e-01], [-0.0000e+00,  7.0711e-01, -7.0711e-01], [1.0000e+00,  3.9736e-08,  3.9736e-08]]])
-    # t = torch.cuda.FloatTensor([[-1.6800, -0.2687,  3.1273]])
-
-    # t = torch.cuda.FloatTensor([[0.0, 1.0, 0.0]])
-
-    # renderer = nr.renderer.Renderer(
-    #     image_size=IMAGE_SIZE, K=K, R=R, t=t, orig_size=w
-    # )
-    # renderer.eye = eye_np.astype(np.float32)
 
     renderer = nr.renderer.Renderer(
         image_size=IMAGE_SIZE, K=K, R=R, t=t, orig_size=w, camera_mode='look_at'
@@ -292,12 +268,6 @@ def get_kinect_K(image_size=2048, kid=1):
                                  [0, 0, 1]]])
     return K, ratio
 
-# dist_coefs = np.array([
-#     [[0.5285511612892151, -2.5982117652893066, 0.0008455392089672387, -0.00040305714355781674, 1.4629453420639038]],
-#     [[0.13652226328849792, -2.3620290756225586, 0.00036366161657497287, -7.667662430321798e-05, 1.5045571327209473]],
-#     [[0.5081287026405334, -2.60143780708313, 0.0010489252163097262, -0.000412493827752769, 1.4849175214767456]],
-#     [[0.31247395277023315, -2.4024288654327393, 0.0005108616896905005, -0.0002883302222471684, 1.43412184715271]]
-# ]) # does not work when passing directly to neural renderer
 dist_coefs = np.array([
     [[0.5285511612892151, -2.5982117652893066, 0.0008455392089672387, -0.00040305714355781674, 1.4629453420639038, 0.4086046814918518, -2.4283204078674316, 1.394896388053894]],
     [[0.13652226328849792, -2.3620290756225586, 0.00036366161657497287, -7.667662430321798e-05, 1.5045571327209473, 0.018772443756461143, -2.171825885772705, 1.419291377067566]],
@@ -308,8 +278,6 @@ dist_coefs = np.array([
 def setup_renderer(view='front', rotate=False, image_size=2048, kid=1,
                    distort=False, dataset_name='behave', R=None, T=None):
     assert dataset_name in ['behave', 'InterCap']
-    # K, ratio = get_kinect_K(image_size, kid)
-    # w, h = 2048, 1536
 
     if dataset_name == 'behave':
         w, h = 2048, 1536
@@ -349,8 +317,6 @@ def setup_renderer(view='front', rotate=False, image_size=2048, kid=1,
     renderer.light_intensity_direction = 0.3
     renderer.light_intensity_ambient = 0.4 # if the person is far away, make this smaller
     renderer.background_color = [1, 1, 1]
-    # renderer.light_color_directional=[0.7, 0.7, 0.7]
-    # renderer.light_color_ambient=[0.7, 0.7, 0.7]
 
     return renderer
 
@@ -408,9 +374,7 @@ class ContactVisualizer:
     def load_part_colors(self):
         colors = np.zeros((14, 3))
         for i in range(len(colors)):
-            # colors[i] = mturk_colors[mturk_reorder[i]]
             colors[i] = mturk_colors[teaser_reorder[i]]
-            # colors[i] = mturk_colors[i]
         return colors
 
     def get_contact_spheres(self, smpl:Mesh, obj:Mesh, radius=None):
@@ -428,10 +392,6 @@ class ContactVisualizer:
         contact_regions = {}
         ball_radius = self.radius if radius is None else radius
         for i in range(PARTS_NUM):
-            # if i >= 8 or i ==6: # 6==right foot, 8 for NTU-RGBD backpacks, 8 for right leg
-            #     continue  # Date03_Sub05_stool/t0061.567_tri-online-mocap30fps_comb.png vis only hand
-            if i ==6: # 6==right foot, 8 for NTU-RGBD backpacks, 8 for right leg
-                continue
             parts_i = contact_labels == i
             if np.sum(parts_i) > 0:
                 color = self.part_colors[i]
@@ -483,14 +443,7 @@ class NrWrapper:
     def render_meshes(self, renderer, meshes:list, viz_contact=False, ret_depth=False, checker=None, colors=None):
         "cam view only"
         verts, faces, texts = self.prepare_render(meshes, viz_contact, checker=checker, colors=colors)
-        # torch.Size([1, 17091, 3]) torch.Size([1, 33776, 3]) torch.Size([1, 33776, 4, 4, 4, 3])
-        # or: torch.Size([1, 17091, 3]) torch.Size([1, 33776, 3]) torch.Size([1, 33776, 1, 1, 1, 3])
-        # print(verts.shape, faces.shape, texts.shape)
         return self.render(renderer, verts, faces, texts, ret_depth=ret_depth)
-        # image, _, mask = renderer.render(vertices=verts, faces=faces, textures=texts)
-        # rend = np.clip(image[0].detach().cpu().numpy().transpose(1, 2, 0), 0, 1)[:, :, :3]
-        # mask = mask[0].detach().cpu().numpy().astype(bool)
-        # return rend, mask
 
     def render_rotate_views(self, meshes:list, outpath, prefix, viz_contact=False,
                             dist=2.5, maxd=1.5, fps=6, add_checker=False):
@@ -610,25 +563,12 @@ class NrWrapper:
         # new_image = np.pad(rgb.copy(), ((L-h, 0), (L-w, 0), (0, 0)))
         rend = (rend.copy()*255).astype(np.uint8)
         new_image[mask] = rend[mask]  # mask out the rendered pixels with mesh rendering results
-        # new_image = (new_image[L-h:, L-w:] * 255).astype(np.uint8)  # crop back to original aspect ratio
         new_image = (new_image[:h, :w]).astype(np.uint8)  # crop back to original aspect ratio
 
         return (
             new_image,
             rend[:h, :w]
         )
-
-    def render_coco(self, meshes, maxd=1.5, angles=[0, 90]):
-        "normalize, render front and side"
-        # faces, texts, verts = self.prepare_side_rend(meshes, maxd=1.6)
-        faces, texts, verts = self.prepare_side_rend(meshes, maxd=maxd)
-
-        renderers = [setup_side_renderer(2.0, azim=x, elev=0) for x in angles]
-        rends = []
-        for renderer in renderers:
-            rend, mask = self.render(renderer, verts, faces, texts)
-            rends.append((rend*255).astype(np.uint8))
-        return rends
 
     def prepare_side_rend(self, meshes, maxd=1.5, viz_contact=False, colors=None, add_checker=False):
         meshes = self.rotate_meshes(meshes) # neural renderer look_at mode and normal mode have different camera convertion!
@@ -646,22 +586,6 @@ class NrWrapper:
 
         return faces, texts, verts
 
-    def render_coco_user(self, meshes, image_size=640, viz_contact=False, maxd=1.6, ret_masks=False):
-        "render coco recon for user study"
-        maxd = self.get_normalize_scale(meshes[0], meshes[1], maxd)
-        faces, texts, verts = self.prepare_side_rend(meshes, maxd=maxd, viz_contact=viz_contact)
-        angles = [0, 90]
-        renderers = [setup_side_renderer(2.0, azim=x, elev=0, image_size=image_size) for x in angles]
-        renderers.append(setup_side_renderer(2.1, azim=0, elev=85, image_size=image_size)) # top view
-        rends, masks = [], []
-        for renderer in renderers:
-            rend, mask = self.render(renderer, verts, faces, texts)
-            rends.append((rend*255).astype(np.uint8))
-            masks.append((mask.astype(float)*255).astype(np.uint8))
-        if ret_masks:
-            return rends, masks
-        return rends
-
     def get_normalize_scale(self, smpl, obj, init_scale):
         """
         determine the normalization scale automatically, if human object too far away, scale them down
@@ -675,36 +599,6 @@ class NrWrapper:
                 return 1.0
             return 1.2
         return init_scale
-
-    def render_ntu_user(self, meshes, image_size=640, viz_contact=False, maxd=1.6, ret_masks=True):
-        """
-        render more side views, and return mask for cropping them
-        """
-        faces, texts, verts = self.prepare_side_rend(meshes, maxd=maxd, viz_contact=viz_contact)
-        # angles = [0, 60, 180, 300]
-        angles = [0, 90, 270]
-        renderers = [setup_side_renderer(2.0, azim=x, elev=0, image_size=image_size) for x in angles]
-        renderers.append(setup_side_renderer(2.1, azim=0, elev=85, image_size=image_size))  # top view
-        rends, masks = [], []
-        for renderer in renderers:
-            rend, mask = self.render(renderer, verts, faces, texts)
-            rends.append((rend * 255).astype(np.uint8))
-            masks.append((mask.astype(float) * 255).astype(np.uint8))
-        if ret_masks:
-            return rends, masks
-        return rends
-
-    def render_coco_userv2(self, meshes):
-        "version 2: render front, side 1, side 2, and top"
-        faces, texts, verts = self.prepare_side_rend(meshes, maxd=1.2)
-        angles = [0, 90, 270]
-        renderers = [setup_side_renderer(2.0, azim=x, elev=0) for x in angles]
-        renderers.append(setup_side_renderer(2.5, azim=0, elev=85))  # top view
-        rends = []
-        for renderer in renderers:
-            rend, mask = self.render(renderer, verts, faces, texts)
-            rends.append((rend * 255).astype(np.uint8))
-        return rends
 
     @staticmethod
     def normalize_meshes(meshes, maxd=2.0, ret_scale=False):
@@ -876,8 +770,6 @@ class NrWrapper:
 
 
 def renderer_with_transform(R, T, light_dir, image_size=2048, dataset_name='behave'):
-    # K, ratio = get_kinect_K(image_size)
-    # w, h = 2048, 1536
     if dataset_name == 'behave':
         w, h = 2048, 1536
         func = get_kinect_K

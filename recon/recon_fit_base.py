@@ -213,27 +213,6 @@ class ReconFitterBase:
         rot = torch.bmm(pseudo, tgt_axis)
 
         return ReconFitterBase.decopose_axis(rot)
-        # try:
-        #     # return rotation matrix directly
-        #     # return ReconFitterBase.project_so3(rot)
-        #     return ReconFitterBase.decopose_axis(rot)
-        # except Exception as e:
-        #     print("Warning: initial rotation computation failed, now adding small random perturbation.")
-        #     return ReconFitterBase.decopose_axis(rot+ 1e-4 * torch.rand(pseudo.shape[0], 3, 3).to(pseudo.device))
-        #     # return ReconFitterBase.project_so3(rot + 1e-4 * torch.rand(pseudo.shape[0], 3, 3).to(pseudo.device))
-
-        # try:
-        #     rot = torch.bmm(pseudo, tgt_axis)
-        #     # return rotation matrix directly
-        #     U, S, V = torch.svd(rot)
-        # except Exception as e:
-        #     print("Warning: initial rotation computation failed, now adding small random perturbation.")
-        #     rot = torch.bmm(pseudo, tgt_axis) + 1e-4 * torch.rand(pseudo.shape[0], 3, 3).to(
-        #         pseudo.device)  # avoid convergence problem
-        #     # return rotation matrix directly
-        # U, S, V = torch.svd(rot)
-        # R = torch.bmm(U, V.transpose(2, 1))
-        # return R
 
     @staticmethod
     def inverse(mat):
@@ -321,11 +300,6 @@ class ReconFitterBase:
         B = len(obj_files)
         obj_verts = torch.tensor(self.scan.v, dtype=torch.float32).repeat(B, 1, 1).to(self.device)
         obj_verts = self.transform_object(obj_verts, obj_R, obj_t, obj_s)
-        # obj_R = self.decopose_axis(obj_R)
-        # project to SO(3)
-        # U, S, V = torch.svd(obj_R)
-        # obj_R = torch.bmm(U, V.transpose(2, 1))
-
         obj_R = self.decopose_axis(obj_R, no_rand=True)
 
         verts = obj_verts.detach().cpu().numpy()
@@ -379,18 +353,10 @@ class ReconFitterBase:
 
     def load_occ_ratios_recon(self, rgb_files,
                             recon_name='tri-visl2-gtsmpl',):
-                            #   recon_name='tri-visl2-smoosmpl'):
-                              # recon_name='tri-visl1'):
-                              # recon_name='tri-visl2-smoosmpl'): # visibility trained with L2 loss
         "load predicted occlusion ratios, return shape: (B,)"
         print(f"Loading occlusion from predicted recon of {recon_name}")
-        # import datetime
-        # ss = str(datetime.datetime.now())
-        # assert "2023-01-2" in ss, 'please check source of occlusion ratios!'
         
         seq_name = DataPaths.get_seq_name(rgb_files[0])
-        # gtpack_file = osp.join("/scratch/inf0/user/xxie/behave-packed/", f'{seq_name}_GT-packed.pkl')
-        # data = joblib.load(gtpack_file)
         test_kid = 2 if "ICap" in seq_name else 1
         data = joblib.load(osp.join(self.outpath, f'recon_{recon_name}/{seq_name}_k{test_kid}.pkl'))
         occ_ratios = np.array(data['neural_visibility'])[:, 0]
@@ -495,36 +461,12 @@ class ReconFitterBase:
     @staticmethod
     def decopose_axis(rot, no_rand=False):
         "project 3x3 matrix to SO(3)"
-        # try:
-        #     U, S, V = torch.svd(rot)
-        # except Exception as e:
-        #     print(e, "Warning: SVD did not converge!")
-        #     rot = rot + 1e-4 * torch.rand(rot.shape[0], 3, 3).to(rot.device)
-        #     U, S, V = torch.svd(rot)
-        #
-        # R = torch.bmm(U, V.transpose(2, 1))
-        # # print("After decompose, determinant:", torch.det(R))
-        # return R
-
-        # if no_rand:
-        #     U, S, V = torch.svd(rot)
-        # else:
-        #     U, S, V = torch.svd(rot+ 1e-4 * torch.rand(rot.shape[0], 3, 3).to(rot.device))
-        # R = torch.bmm(U, V.transpose(2, 1))
-        # return R
 
         # real SO(3) projection
         if no_rand:
             return ReconFitterBase.project_so3(rot)
         else:
             return ReconFitterBase.project_so3(rot + 1e-4 * torch.rand(rot.shape[0], 3, 3).to(rot.device))
-
-        # sep 27, use real orthogornalization
-        # try:
-        #     return ReconFitterBase.project_so3(rot)
-        # except Exception as e:
-        #     print(e, "Warning: SVD did not converge!")
-        #     return ReconFitterBase.project_so3(rot + 1e-4 * torch.rand(rot.shape[0], 3, 3).to(rot.device))
 
     def prepare_query_dict(self, batch):
         """
@@ -546,11 +488,6 @@ class ReconFitterBase:
         :param pc_generated:
         :return:
         """
-
-        # human_points = pc_generated['human']['points'].clone().detach().to(self.device)
-        # obj_points = pc_generated['object']['points'].clone().detach().to(self.device)
-        # human_parts = pc_generated['human']['parts'].clone().detach().to(self.device)
-
         # use predicted human centers
         human_t = self.get_smpl_translation(data, pc_generated)
         smpl = self.get_smpl_init(data.get('path'), human_t)
@@ -679,10 +616,6 @@ class ReconFitterBase:
 
     def compute_obj_loss(self, data_dict, loss_dict, model, obj_s, object, preds):
         "object df_o loss"
-        # query_dict = self.update_query_dict(object, data_dict['query_dict'])
-        # model.query(object, **query_dict)
-        # model.query(object, **data_dict['query_dict'])
-        # preds = model.get_preds()
         # do not rerun object query
         df_pred, pca_pred, parts_pred = preds[:3]
         loss_dict['object'] = torch.clamp(df_pred[:, 1:2, :], max=0.8).mean()

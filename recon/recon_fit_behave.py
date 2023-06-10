@@ -193,10 +193,6 @@ class ReconFitterBehave(ReconFitterBase):
         return generator
 
     def init_dataloader(self, args):
-        # batch_size = args.batch_size
-        # image_files = DataPaths.get_image_paths_seq(self.seq_folder, args.test_kid, check_occlusion=False)
-        # batch_end = args.end if args.end is not None else len(image_files)
-        # image_files = image_files[args.start:batch_end]
         batch_size = args.batch_size
         image_files = self.get_test_files(args)
 

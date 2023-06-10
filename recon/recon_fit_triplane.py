@@ -145,22 +145,6 @@ class ReconFitterTriplane(ReconFitterBehave):
 
     def load_old_obj_recon(self, image_paths, recon_name=None):
         "load old object recon parameters"
-        # kids, recon_paths = self.get_old_recon_paths(image_paths, recon_name)
-        # param_files = [osp.join(x, f'k{kid}.object.pkl') for x, kid in zip(recon_paths, kids)]
-        # rots, transls, scales = [], [], []
-        # for file in param_files:
-        #     params = pkl.load(open(file, 'rb'))
-        #     rot = params['rot']
-        #     assert rot.shape == (3, 3), f'invalid rotation shape {rot.shape} for file {file}'
-        #     rots.append(rot)
-        #     trans = params['trans']
-        #     assert len(trans) == 3, f'invalid translation shape {trans.shape} for file {file}'
-        #     transls.append(trans)
-        #     if 'scale' in params:
-        #         scales.append(params['scale'])
-        #     else:
-        #         scales.append(1.)
-
         # load from packed recon
         frame_inds, recon_packed = self.load_old_recon_packed(image_paths, recon_name)
         rots = [recon_packed['obj_angles'][i] for i in frame_inds]
@@ -170,21 +154,6 @@ class ReconFitterTriplane(ReconFitterBehave):
 
     def load_old_smpl_recon(self, image_paths, recon_name=None):
         "load old SMPL recon parameters"
-        # kids, recon_paths = self.get_old_recon_paths(image_paths, recon_name)
-        # param_files = [osp.join(x, f'k{kid}.smpl.pkl') for x, kid in zip(recon_paths, kids)]
-        # poses, betas, trans = [], [], []
-        # for param_file in param_files:
-        #     params = pkl.load(open(param_file, 'rb'))
-        #     pose = params['pose'].reshape(-1)
-        #     # assert len(pose) == 72, f'invalid recon param for file {param_file}'
-        #     # if len(pose) != 72:
-        #     #     print("Warning: loading hand pose as well")
-        #     assert len(pose) in [72, 156], f'invalid recon param shape {len(pose)} for file {param_file}'
-        #     poses.append(pose)
-        #     betas.append(params['betas'])
-        #     trans.append(params['trans'])
-        # return betas, poses, trans
-
         # d = 10
         # # load from packed data
         frame_inds, recon_packed = self.load_old_recon_packed(image_paths, recon_name)
@@ -327,14 +296,6 @@ class ReconFitterTriplane(ReconFitterBehave):
 
         # triplane data loader config
         configs.triplane_type = args.triplane_type
-        if args.triplane_type == 'gt':
-            import datetime
-            ts = str(datetime.datetime.now())
-            if '2022-10-16' in ts or '2022-10-17' in ts:
-                # temporally usage only!
-                pass
-            else:
-                assert args.tid == 1, 'only support testing on GT kinect 1!'
         print("Triplane SMPL is from", args.triplane_type)
         return configs
 
